@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace local_messager
@@ -148,6 +146,14 @@ namespace local_messager
             public string ipAdress { get; set; }
             public int port { get; set; }
             private bool work_flag = false;
+            public string GetHostName()
+            {
+                return Dns.GetHostName(); 
+            }
+            public string GetIPAdress()
+            {
+                return Dns.GetHostEntry(GetHostName()).AddressList[1].ToString();
+            }
             public void start()
             {
                 start_logic();
@@ -163,12 +169,24 @@ namespace local_messager
                 work_flag = true;
                 try
                 {
-                    tcpListener = new TcpListener(System.Net.IPAddress.Parse(ipAdress), port);
-                    tcpListener.Start();
-                    while (true)
+                    if (String.IsNullOrEmpty(ipAdress))
                     {
-                        logic();
+                        tcpListener = new TcpListener(IPAddress.Any, port);
                     }
+                    else
+                    {
+                        tcpListener = new TcpListener(IPAddress.Parse(ipAdress.Trim()), port);
+                    }
+                    tcpListener.Start();
+                    //string name = Dns.GetHostName();
+                    //string IP = Dns.GetHostByName(name).AddressList[0].ToString();
+                    //var ip = Dns.GetHostEntry(name).AddressList[1];
+                    //MessageBox.Show(name + ip);
+                    
+                    //while (true)
+                    //{
+                    //    logic();
+                    //}
                 }
                 catch (Exception e)
                 {

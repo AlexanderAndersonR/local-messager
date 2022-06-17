@@ -26,8 +26,8 @@ namespace local_messager
 
         private void toolStripMenuItem_ConnecttoLocalServer_Click(object sender, EventArgs e)
         {
-            Form_ConnectLocalServer form_ConnectLocalServer = new Form_ConnectLocalServer(server);
-            form_ConnectLocalServer.ShowDialog();
+            //Form_ConnectLocalServer form_ConnectLocalServer = new Form_ConnectLocalServer(server);
+            //form_ConnectLocalServer.ShowDialog();
         }
     }
 }

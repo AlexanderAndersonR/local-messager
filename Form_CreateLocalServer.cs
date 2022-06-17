@@ -26,7 +26,13 @@ namespace local_messager
             {
                 textBox_IP.Text = Properties.Settings.Default.ipCreate;
             }
+            else
+            {
+                textBox_IP.Text = server.GetIPAdress();
+            }
             textBox_Port.Text = Properties.Settings.Default.portCreate.ToString();
+            label_HostName.Text += server.GetHostName();
+            label_ipAdress.Text += server.GetIPAdress();
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)

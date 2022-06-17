@@ -14,7 +14,7 @@ namespace local_messager
     public partial class Form_ConnectLocalServer: Form_CreateLocalServer
     {
         tcp.server Server { get; set; }
-        public Form_ConnectLocalServer(tcp.server server)
+        public Form_ConnectLocalServer(tcp.server server):base(Form_CreateLocalServer)
         {
             Server = server;
             InitializeComponent();
