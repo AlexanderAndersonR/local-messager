@@ -17,6 +17,7 @@ namespace local_messager
         public Form_CreateLocalServer(tcp.server server)
         {
             InitializeComponent();
+            this.StartPosition = FormStartPosition.CenterScreen;
             Server = server;
             if (Properties.Settings.Default.CodeCreate!= null && Properties.Settings.Default.CodeCreate != "")
             {

@@ -16,6 +16,10 @@ namespace local_messager
         public LocalMessager_form()
         {
             InitializeComponent();
+            this.StartPosition = FormStartPosition.CenterScreen;
+            //test
+            Form_ConnectLocalServer form_ConnectLocalServer = new Form_ConnectLocalServer();
+            form_ConnectLocalServer.ShowDialog();
         }
 
         private void toolStripMenuItem_CreateLocalServer_Click(object sender, EventArgs e)
@@ -26,8 +30,8 @@ namespace local_messager
 
         private void toolStripMenuItem_ConnecttoLocalServer_Click(object sender, EventArgs e)
         {
-            //Form_ConnectLocalServer form_ConnectLocalServer = new Form_ConnectLocalServer(server);
-            //form_ConnectLocalServer.ShowDialog();
+            Form_ConnectLocalServer form_ConnectLocalServer = new Form_ConnectLocalServer();
+            form_ConnectLocalServer.ShowDialog();
         }
     }
 }

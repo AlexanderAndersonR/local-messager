@@ -145,6 +145,9 @@
             this.Controls.Add(this.label_ip);
             this.Controls.Add(this.textBox_IP);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(424, 308);
+            this.MinimumSize = new System.Drawing.Size(424, 308);
             this.Name = "Form_CreateLocalServer";
             this.Text = "Create Local Server";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form_CreateLocalServer_KeyDown);

@@ -28,10 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_ConnectLocalServer));
+            this.SuspendLayout();
+            // 
+            // Form_ConnectLocalServer
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "Form_ConnectLocalServer";
+            this.ClientSize = new System.Drawing.Size(408, 269);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(424, 308);
+            this.MinimumSize = new System.Drawing.Size(424, 308);
+            this.Name = "Form_ConnectLocalServer";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Connect Local Server";
+            this.ResumeLayout(false);
+
         }
 
         #endregion

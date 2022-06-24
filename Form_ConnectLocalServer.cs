@@ -11,13 +11,14 @@ using System.Text.RegularExpressions;
 
 namespace local_messager
 {
-    public partial class Form_ConnectLocalServer: Form_CreateLocalServer
+    public partial class Form_ConnectLocalServer: Form
     {
         tcp.server Server { get; set; }
-        public Form_ConnectLocalServer(tcp.server server):base(Form_CreateLocalServer)
+        public Form_ConnectLocalServer()
         {
-            Server = server;
+            //Server = server;
             InitializeComponent();
+            
         }
     }
 }
