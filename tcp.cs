@@ -11,22 +11,30 @@ namespace local_messager
         public class client
         {
             private TcpClient tcpClient = new TcpClient();
-            public string server { get; set; }
+            public string ipAdress { get; set; }
             public int port { get; set; }
             public bool con_status { get; set; }
             public string code { get; set; }
-            public void connect()
+            public bool connect()
             {
                 try
                 {
-                    tcpClient.Connect(server, port);
+                    tcpClient.Connect(ipAdress, port);
                     con_status = true;
+                    return true;
                 }
                 catch (Exception e)
                 {
                     MessageBox.Show("Ошибка при подключении к серверу\r\n" + e, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                     con_status = false;
+                    return false;
                 }
+            }
+            public bool connect(string _ipAdress, int _port)
+            {
+                ipAdress = _ipAdress;
+                port=_port;
+                return connect();
             }
             public string read()
             {
@@ -154,17 +162,7 @@ namespace local_messager
             {
                 return Dns.GetHostEntry(GetHostName()).AddressList[1].ToString();
             }
-            public void start()
-            {
-                start_logic();
-            }
-            public void start(string _ipAdress, int _port)
-            {
-                ipAdress = _ipAdress;
-                port = _port;
-                start_logic();
-            }
-            private void start_logic()
+            public bool start()
             {
                 work_flag = true;
                 try
@@ -178,11 +176,12 @@ namespace local_messager
                         tcpListener = new TcpListener(IPAddress.Parse(ipAdress.Trim()), port);
                     }
                     tcpListener.Start();
+                    return true;
                     //string name = Dns.GetHostName();
                     //string IP = Dns.GetHostByName(name).AddressList[0].ToString();
                     //var ip = Dns.GetHostEntry(name).AddressList[1];
                     //MessageBox.Show(name + ip);
-                    
+
                     //while (true)
                     //{
                     //    logic();
@@ -192,7 +191,14 @@ namespace local_messager
                 {
                     work_flag = false;
                     MessageBox.Show(e.Message);
+                    return false;
                 }
+            }
+            public bool start(string _ipAdress, int _port)
+            {
+                ipAdress = _ipAdress;
+                port = _port;
+                return start();
             }
             public void stop()
             {
@@ -210,6 +216,10 @@ namespace local_messager
             public virtual void logic()
             {
 
+            }
+            public string message()
+            {
+                return "";
             }
         }
     }

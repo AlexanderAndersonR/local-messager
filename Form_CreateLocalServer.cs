@@ -14,9 +14,11 @@ namespace local_messager
     public partial class Form_CreateLocalServer : Form
     {
         tcp.server Server {get;set;}
+        //LocalMessager_form main = this.Owner as LocalMessager_form;
         public Form_CreateLocalServer(tcp.server server)
         {
             InitializeComponent();
+            //LocalMessager_form main = this.Owner as LocalMessager_form;
             this.StartPosition = FormStartPosition.CenterScreen;
             Server = server;
             if (Properties.Settings.Default.CodeCreate!= null && Properties.Settings.Default.CodeCreate != "")
@@ -85,8 +87,14 @@ namespace local_messager
         }
         private void start_server()
         {
-            Server.start(Properties.Settings.Default.ipCreate, Properties.Settings.Default.portCreate);
-            this.Close();
+            if (Server.start(Properties.Settings.Default.ipCreate, Properties.Settings.Default.portCreate))
+                this.Close();
+            //LocalMessager_form main = this.Owner as LocalMessager_form;
+            //if (main != null)
+            //{
+            //    BeginInvoke(new main.SetTextDeleg(main.si_DataReceived), new object[] { Server.message() });
+            //}
+            //BeginInvoke(new local_messager.LocalMessager_form.SetTextDeleg(LocalMessager_form.si_DataReceived),new object[] {Server.message()});
         }
     }
 }

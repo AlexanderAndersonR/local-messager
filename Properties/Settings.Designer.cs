@@ -94,5 +94,17 @@ namespace local_messager.Properties {
                 this["portConnect"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string NickName {
+            get {
+                return ((string)(this["NickName"]));
+            }
+            set {
+                this["NickName"] = value;
+            }
+        }
     }
 }
