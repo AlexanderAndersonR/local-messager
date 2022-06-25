@@ -39,6 +39,10 @@ namespace local_messager
         {
             textBox1.Text += data +"\n\r";
         }
+        public void startReadMessageServer()
+        {
+           BeginInvoke(new SetTextDeleg(si_DataReceived), new object[] { Server.re });
+        }
     }
 }
 
