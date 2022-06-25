@@ -33,6 +33,7 @@
             this.toolStripMenuItem_CreateLocalServer = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_ConnecttoLocalServer = new System.Windows.Forms.ToolStripMenuItem();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.ToolStripMenuItem_disconnect = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -40,7 +41,8 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem_CreateLocalServer,
-            this.toolStripMenuItem_ConnecttoLocalServer});
+            this.toolStripMenuItem_ConnecttoLocalServer,
+            this.ToolStripMenuItem_disconnect});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(800, 24);
@@ -69,6 +71,13 @@
             this.textBox1.Size = new System.Drawing.Size(253, 374);
             this.textBox1.TabIndex = 1;
             // 
+            // ToolStripMenuItem_disconnect
+            // 
+            this.ToolStripMenuItem_disconnect.Name = "ToolStripMenuItem_disconnect";
+            this.ToolStripMenuItem_disconnect.Size = new System.Drawing.Size(78, 20);
+            this.ToolStripMenuItem_disconnect.Text = "Disconnect";
+            this.ToolStripMenuItem_disconnect.Click += new System.EventHandler(this.ToolStripMenuItem_disconnect_Click);
+            // 
             // LocalMessager_form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -92,6 +101,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_CreateLocalServer;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_ConnecttoLocalServer;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_disconnect;
     }
 }
 

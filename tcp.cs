@@ -177,15 +177,11 @@ namespace local_messager
                     }
                     tcpListener.Start();
                     return true;
-                    //string name = Dns.GetHostName();
-                    //string IP = Dns.GetHostByName(name).AddressList[0].ToString();
-                    //var ip = Dns.GetHostEntry(name).AddressList[1];
-                    //MessageBox.Show(name + ip);
 
-                    //while (true)
-                    //{
-                    //    logic();
-                    //}
+                    while (true)
+                    {
+                        logic();
+                    }
                 }
                 catch (Exception e)
                 {
@@ -215,12 +211,12 @@ namespace local_messager
             }
             public virtual void logic()
             {
-
+                TcpClient tcpClient = tcpListener.AcceptTcpClient();
             }
-            public string message()
-            {
-                return "";
-            }
+            //public string message()
+            //{
+            //    return "";
+            //}
         }
     }
 

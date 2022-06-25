@@ -88,11 +88,20 @@ namespace local_messager
         private void start_server()
         {
             if (Server.start(Properties.Settings.Default.ipCreate, Properties.Settings.Default.portCreate))
+            {
+                LocalMessager_form main_form = this.Owner as LocalMessager_form;
+                if (main_form != null)
+                {
+                    main_form.StartSetting(Server);
+                    //BeginInvoke(new main.SetTextDeleg(main.si_DataReceived), new object[] { Server.message() });
+            }
                 this.Close();
+            }
             //LocalMessager_form main = this.Owner as LocalMessager_form;
             //if (main != null)
             //{
-            //    BeginInvoke(new main.SetTextDeleg(main.si_DataReceived), new object[] { Server.message() });
+            //    main.s
+            //    //BeginInvoke(new main.SetTextDeleg(main.si_DataReceived), new object[] { Server.message() });
             //}
             //BeginInvoke(new local_messager.LocalMessager_form.SetTextDeleg(LocalMessager_form.si_DataReceived),new object[] {Server.message()});
         }

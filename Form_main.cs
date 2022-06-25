@@ -14,10 +14,11 @@ namespace local_messager
     {
         tcp.server Server = new tcp.server();
         tcp.client Client = new tcp.client();
-
+        object setting = null;
         public LocalMessager_form()
         {
             InitializeComponent();
+            ToolStripMenuItem_disconnect.Visible = false;
             this.StartPosition = FormStartPosition.CenterScreen;
         }
 
@@ -41,8 +42,45 @@ namespace local_messager
         }
         public void startReadMessageServer()
         {
-           BeginInvoke(new SetTextDeleg(si_DataReceived), new object[] { Server.re });
+           //BeginInvoke(new SetTextDeleg(si_DataReceived), new object[] { Server.re });
         }
+        //public void setTextTextBox(string message)
+        //{
+        //    textBox1.Text += message + "\n\r"; 
+        //}
+        public void StartSetting(object _setting)
+        {
+            if (_setting is tcp.server)
+            {
+                setting = _setting;
+                textBox1.Text += "Server started\r\n";
+                ToolStripMenuItem_disconnect.Visible = true;
+                toolStripMenuItem_CreateLocalServer.Enabled = false;
+            }
+            if (_setting is tcp.client)
+            {
+                setting = _setting;
+                textBox1.Text += "Connecting server...\r\n";
+                toolStripMenuItem_ConnecttoLocalServer.Enabled = false;
+                ToolStripMenuItem_disconnect.Visible = true;
+            }
+        }
+
+        private void ToolStripMenuItem_disconnect_Click(object sender, EventArgs e)
+        {
+            if (setting is tcp.server)
+            {
+                Server.stop();
+                textBox1.Text += "Server stoped\r\n";
+                ToolStripMenuItem_disconnect.Visible = false;
+                toolStripMenuItem_CreateLocalServer.Enabled = true;
+            }
+            if (setting is tcp.client)
+            {
+
+            }
+        }
+        
     }
 }
 
