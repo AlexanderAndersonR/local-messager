@@ -18,6 +18,7 @@ namespace local_messager
         public LocalMessager_form()
         {
             InitializeComponent();
+            textBox = textBox1;
             ToolStripMenuItem_disconnect.Visible = false;
             this.StartPosition = FormStartPosition.CenterScreen;
         }
@@ -80,7 +81,7 @@ namespace local_messager
 
             }
         }
-        
+        public TextBox textBox { get; set; } 
     }
 }
 

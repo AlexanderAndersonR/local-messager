@@ -76,7 +76,18 @@ namespace local_messager
         private void button_Connect_Click(object sender, EventArgs e)
         {
             if (Client.connect(Properties.Settings.Default.ipConnect, Properties.Settings.Default.portConnect))
+            {
+                LocalMessager_form main_form = this.Owner as LocalMessager_form;
+                if (main_form != null)
+                {
+                    main_form.StartSetting(Client);
+                    //Server.getMessage(main_form.textBox);
+                    // BeginInvoke();
+                    //Thread clientThread = new Thread(()=>Server.getMessage(main_form.textBox));
+                    //clientThread.Start();
+                }
                 this.Close();
+            }
         }
     }
     }

@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -18,7 +19,6 @@ namespace local_messager
         public Form_CreateLocalServer(tcp.server server)
         {
             InitializeComponent();
-            //LocalMessager_form main = this.Owner as LocalMessager_form;
             this.StartPosition = FormStartPosition.CenterScreen;
             Server = server;
             if (Properties.Settings.Default.CodeCreate!= null && Properties.Settings.Default.CodeCreate != "")
@@ -87,23 +87,21 @@ namespace local_messager
         }
         private void start_server()
         {
-            if (Server.start(Properties.Settings.Default.ipCreate, Properties.Settings.Default.portCreate))
-            {
-                LocalMessager_form main_form = this.Owner as LocalMessager_form;
-                if (main_form != null)
+            Thread listenThread = new Thread(new ThreadStart(()=>Server.start(Properties.Settings.Default.ipCreate, Properties.Settings.Default.portCreate)));
+                if (Server.work_flag)
                 {
-                    main_form.StartSetting(Server);
-                    //BeginInvoke(new main.SetTextDeleg(main.si_DataReceived), new object[] { Server.message() });
-            }
-                this.Close();
-            }
-            //LocalMessager_form main = this.Owner as LocalMessager_form;
-            //if (main != null)
-            //{
-            //    main.s
-            //    //BeginInvoke(new main.SetTextDeleg(main.si_DataReceived), new object[] { Server.message() });
-            //}
-            //BeginInvoke(new local_messager.LocalMessager_form.SetTextDeleg(LocalMessager_form.si_DataReceived),new object[] {Server.message()});
+                    LocalMessager_form main_form = this.Owner as LocalMessager_form;
+                    if (main_form != null)
+                    {
+                        main_form.StartSetting(Server);
+                        Server.getMessage(main_form.textBox);
+                        // BeginInvoke();
+                        //Thread clientThread = new Thread(()=>Server.getMessage(main_form.textBox));
+                        //clientThread.Start();
+                        Server.getMessage(main_form.textBox);
+                    }
+                    this.Close();
+                }
         }
     }
 }
