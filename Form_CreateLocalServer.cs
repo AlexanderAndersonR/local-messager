@@ -75,33 +75,48 @@ namespace local_messager
 
         private void Form_CreateLocalServer_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
-            {
-                start_server();
-            }
+            //if (e.KeyCode == Keys.Enter)
+            //{
+            //    start_server();
+            //}
         }
 
         private void button_Create_Click(object sender, EventArgs e)
         {
             start_server();
+            //Thread listenThread = new Thread(new ThreadStart(()=>Server.waiting_for_the_client()));
+            //listenThread.Start();
         }
         private void start_server()
         {
-            Thread listenThread = new Thread(new ThreadStart(()=>Server.start(Properties.Settings.Default.ipCreate, Properties.Settings.Default.portCreate)));
-                if (Server.work_flag)
+                if (Server.start(Properties.Settings.Default.ipCreate, Properties.Settings.Default.portCreate))
                 {
-                    LocalMessager_form main_form = this.Owner as LocalMessager_form;
-                    if (main_form != null)
-                    {
-                        main_form.StartSetting(Server);
-                        Server.getMessage(main_form.textBox);
-                        // BeginInvoke();
-                        //Thread clientThread = new Thread(()=>Server.getMessage(main_form.textBox));
-                        //clientThread.Start();
-                        Server.getMessage(main_form.textBox);
-                    }
-                    this.Close();
+                LocalMessager_form main_form = this.Owner as LocalMessager_form;
+                if (main_form != null)
+                {
+                    main_form.StartSetting(Server);
                 }
+                this.Close();
+            }
         }
+        //BeginInvoke(new SetTextDeleg(si_DataReceived), new object[] { client.read() });
+        //private delegate void SetTextDeleg(string text);
+        //private void si_DataReceived(string data)
+        //{
+        //    save_log_file(data.Trim());
+        //    DataReceived.Add(data.Trim());
+        //    if (checked_message)
+        //    {
+        //        checked_message_List.Add(data.Trim());
+        //    }
+        //    for (int i = 0; i < DataReceived.Count; i++)
+        //    {
+        //        if (i == 100)
+        //        {
+        //            DataReceived.RemoveAt(0);
+        //        }
+        //    }
+        //    Form_LogDialog.getTextBox().Lines = DataReceived.ToArray();
+        //}
     }
 }

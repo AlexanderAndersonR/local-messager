@@ -23,7 +23,10 @@ namespace local_messager
             this.StartPosition = FormStartPosition.CenterScreen;
             textBox_NickName.Text = !String.IsNullOrEmpty(Properties.Settings.Default.NickName) ? textBox_NickName.Text = Properties.Settings.Default.NickName : "Enter your nickname";
             if (!String.IsNullOrEmpty(Properties.Settings.Default.CodeConnect))
+            {
                 comboBox1.SelectedItem = Properties.Settings.Default.CodeConnect;
+                Client.code = Properties.Settings.Default.CodeConnect;
+            }
             textBox_IP.Text = Properties.Settings.Default.ipConnect = !String.IsNullOrEmpty(Properties.Settings.Default.ipConnect) ? Properties.Settings.Default.ipConnect : "Enter server ip";
             textBox_Port.Text = Properties.Settings.Default.portConnect.ToString();
         }
@@ -88,6 +91,8 @@ namespace local_messager
                 }
                 this.Close();
             }
+            //Thread listenThread = new Thread(new ThreadStart(() => Server.waiting_for_the_client()));
+            //listenThread.Start();
         }
     }
     }
