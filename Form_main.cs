@@ -136,34 +136,36 @@ namespace local_messager
         }
         public void ClientConnect(TcpClient tcpClient)
         {
-            Invoke(new textBoxAdd_del(textBoxAdd), new object[] { "client connecting" });
-            while (true)
-            {
-                try
-                {
-                    NetworkStream stream = tcpClient.GetStream();
-                    // сообщение для отправки клиенту
-                    string response = "Привет мир";
-                    // преобразуем сообщение в массив байтов
-                    byte[] data = Encoding.UTF8.GetBytes(response);
+            Invoke(new textBoxAdd_del(textBoxAdd), "client (name) connecting\n\r");
+            BeginInvoke(new textBoxAdd_del(textBoxAdd), "client connecting\n\r", new object[] { Server.read(tcpClient)});
+            NetworkStream stream = tcpClient.GetStream();
+            //while (true)
+            //{
+            //    try
+            //    {
+            //        //NetworkStream stream = tcpClient.GetStream();
+            //        // сообщение для отправки клиенту
+            //        string response = "Привет мир";
+            //        // преобразуем сообщение в массив байтов
+            //        byte[] data = Encoding.UTF8.GetBytes(response);
 
-                    // отправка сообщения
-                    stream.Write(data, 0, data.Length);
-                    //Console.WriteLine("Отправлено сообщение: {0}", response);
-                    //// закрываем поток
-                    //stream.Close();
-                    //// закрываем подключение
-                    //tcpClient.Close();
-                    // создаем новый поток для обслуживания нового клиента
-                    //Thread clientThread = new Thread(new ThreadStart(clientObject.Process));
-                    //clientThread.Start();
-                }
-                catch (Exception e)
-                {
-                    if (debugging) MessageBox.Show(e.Message);
-                    break;
-                }
-            }
+            //        // отправка сообщения
+            //        stream.Write(data, 0, data.Length);
+            //        //Console.WriteLine("Отправлено сообщение: {0}", response);
+            //        //// закрываем поток
+            //        //stream.Close();
+            //        //// закрываем подключение
+            //        //tcpClient.Close();
+            //        // создаем новый поток для обслуживания нового клиента
+            //        //Thread clientThread = new Thread(new ThreadStart(clientObject.Process));
+            //        //clientThread.Start();
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        if (debugging) MessageBox.Show(e.Message);
+            //        break;
+            //    }
+            //}
         }
     }
 }

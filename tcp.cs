@@ -155,12 +155,13 @@ namespace local_messager
         }
         public class server
         {
-            public List<String> history = new List<String>();
+            //public List<String> history = new List<String>();
             public List<TcpClient> clients = new List<TcpClient>();
             public TcpListener tcpListener;
             public bool debugging;
             public string ipAdress { get; set; }
             public int port { get; set; }
+            public string code { get; set; }
             public bool work_flag = false;
             public string GetHostName()
             {
@@ -212,69 +213,49 @@ namespace local_messager
                     if (debugging) MessageBox.Show(e.Message);
                 }
             }
-            //public void waiting_for_the_client()
-            //{
-            //    try
-            //    {
-            //        while (true)
-            //        {
-            //            TcpClient tcpClient = tcpListener.AcceptTcpClient();
-            //            //ClientObject clientObject = new ClientObject(tcpClient, this);
-            //            //Thread clientThread = new Thread(new ThreadStart(clientObject.Process));
-            //            clients.Add(tcpClient);
-            //            Thread clientThread = new Thread(new ThreadStart(()=>getMessage(tcpClient)));
-            //            clientThread.Start();
-            //        }
-                    
-            //    }
-            //    catch (Exception e )
-            //    {
-            //        if(debugging) MessageBox.Show(e.Message);
-            //    }
-            //}
-            //public void getMessage(TcpClient tcpClient)
-            //{
-            //    //TcpClient tcpClient = tcpListener.AcceptTcpClient();
-            //    history.Add("client connecting");
-            //    while (true)
-            //    {
-            //        try
-            //        {
-            //            NetworkStream stream = tcpClient.GetStream();
-            //            // сообщение для отправки клиенту
-            //            string response = "Привет мир";
-            //            // преобразуем сообщение в массив байтов
-            //            byte[] data = Encoding.UTF8.GetBytes(response);
-
-            //            // отправка сообщения
-            //            stream.Write(data, 0, data.Length);
-            //            //Console.WriteLine("Отправлено сообщение: {0}", response);
-            //            //// закрываем поток
-            //            //stream.Close();
-            //            //// закрываем подключение
-            //            //tcpClient.Close();
-            //            // создаем новый поток для обслуживания нового клиента
-            //            //Thread clientThread = new Thread(new ThreadStart(clientObject.Process));
-            //            //clientThread.Start();
-            //        }
-            //        catch (Exception e)
-            //        {
-            //            if (debugging) MessageBox.Show(e.Message);
-            //            break;
-            //        }
-            //    }
-            //}
-            
-            public void ClientStart(TcpClient tcpClient)
+            public string read(TcpClient tcpClient)
             {
                 try
                 {
-                    NetworkStream stream = tcpClient.GetStream();
-                    history.Add("client connecting");
+                    if (work_flag)
+                    {
+                        NetworkStream stream = tcpClient.GetStream();
+                        StringBuilder response = new StringBuilder();
+                        byte[] data = new byte[256];
+                        do
+                        {
+                            int bytes = stream.Read(data, 0, data.Length);
+                            if (code == "UTF8")
+                            {
+                                response.Append(Encoding.UTF8.GetString(data, 0, bytes));
+                            }
+                            else if (code == "ASCII")
+                            {
+                                response.Append(Encoding.ASCII.GetString(data, 0, bytes));
+                            }
+                            else if (code == "Unicode")
+                            {
+                                response.Append(Encoding.Unicode.GetString(data, 0, bytes));
+                            }
+                            else if (code == "UTF7")
+                            {
+                                response.Append(Encoding.UTF7.GetString(data, 0, bytes));
+                            }
+                        }
+                        while (stream.DataAvailable);
+                        return response.ToString();
+                    }
+                    else
+                    {
+                        work_flag = false;
+                        return "port closed";
+                    }
                 }
                 catch (Exception e)
                 {
-                    if (debugging) MessageBox.Show(e.Message);
+                    work_flag = false;
+                    if (debugging) MessageBox.Show("Ошибка при подключении к серверу\r\n" + e, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    return "port error";
                 }
             }
             public void Send(string message)
@@ -285,7 +266,6 @@ namespace local_messager
                 {
                     NetworkStream stream = item.GetStream();
                     stream.Write(data, 0, data.Length);
-
                 }
             }
         }
