@@ -106,7 +106,15 @@ namespace local_messager
 
         private void LocalMessager_form_Load(object sender, EventArgs e)
         {
-
+            try
+            {
+                Server.stop();
+                Client.Disconnect();
+            }
+            catch (Exception ex)
+            {
+                if (debugging) MessageBox.Show(ex.Message);
+            }
         }
         public void waiting_for_the_client()
         {
@@ -137,8 +145,8 @@ namespace local_messager
         public void ClientConnect(TcpClient tcpClient)
         {
             Invoke(new textBoxAdd_del(textBoxAdd), "client (name) connecting\n\r");
-            BeginInvoke(new textBoxAdd_del(textBoxAdd), "client connecting\n\r", new object[] { Server.read(tcpClient)});
-            NetworkStream stream = tcpClient.GetStream();
+            BeginInvoke(new textBoxAdd_del(textBoxAdd), new object[] { Server.read(tcpClient)});
+           // NetworkStream stream = tcpClient.GetStream();
             //while (true)
             //{
             //    try

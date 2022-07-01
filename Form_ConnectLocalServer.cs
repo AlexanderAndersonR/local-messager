@@ -35,6 +35,7 @@ namespace local_messager
         {
             if (!String.IsNullOrEmpty(comboBox1.SelectedItem.ToString()))
             {
+                Client.code = comboBox1.SelectedItem.ToString();
                 Properties.Settings.Default.CodeConnect = comboBox1.SelectedItem.ToString();
                 Properties.Settings.Default.Save();
             }
@@ -94,5 +95,6 @@ namespace local_messager
             //Thread listenThread = new Thread(new ThreadStart(() => Server.waiting_for_the_client()));
             //listenThread.Start();
         }
+
     }
     }

@@ -84,17 +84,6 @@ namespace local_messager
                     return "port error";
                 }
             }
-            public void close()
-            {
-                if (tcpClient != null)
-                {
-                    if (con_status)
-                    {
-                        tcpClient.Close();
-
-                    }
-                }
-            }
             public void Disconnect()
             {
                 if (tcpClient.Connected)
