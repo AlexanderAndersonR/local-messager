@@ -111,7 +111,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "LocalMessager_form";
             this.Text = "LocalMessager";
-            this.Load += new System.EventHandler(this.LocalMessager_form_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LocalMessager_form_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);

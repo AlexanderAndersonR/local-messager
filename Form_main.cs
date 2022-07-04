@@ -21,7 +21,7 @@ namespace local_messager
         public LocalMessager_form()
         {
             InitializeComponent();
-            Server.debugging = true;
+            Server.debugging_message = true;
             Client.debugging = true;
             debugging = true;
             ToolStripMenuItem_disconnect.Visible = false;
@@ -41,7 +41,7 @@ namespace local_messager
             form_ConnectLocalServer.Owner = this;
             form_ConnectLocalServer.ShowDialog();
         }
-        public void StartSetting(object _setting)
+        public async void StartSetting(object _setting)
         {
             if (_setting is tcp.server)
             {
@@ -59,7 +59,10 @@ namespace local_messager
                 textBox1.Text += "Connecting server...\r\n";
                 toolStripMenuItem_ConnecttoLocalServer.Enabled = false;
                 ToolStripMenuItem_disconnect.Visible = true;
-                BeginInvoke(new SetTextDeleg_client(si_DataReceived), new object[] { Client.read() });
+                await Task.Run(() => 
+                {
+                    while (Client.con_status) { BeginInvoke(new SetTextDeleg_client(si_DataReceived), new object[] { Client.read() }); }
+                    });
             }
         }
 
@@ -74,14 +77,13 @@ namespace local_messager
             }
             if (setting is tcp.client)
             {
-                Client.close();
                 Client.Disconnect();
                 textBox1.Text += "Discinnecting\r\n";
                 toolStripMenuItem_ConnecttoLocalServer.Enabled = true;
                 ToolStripMenuItem_disconnect.Visible = false;
             }
         }
-        private delegate void SetTextDeleg(List<String> text);
+       // private delegate void SetTextDeleg(List<String> text);
         private delegate void SetTextDeleg_client(string text);
         public void si_DataReceived(List<String> text)
         {
@@ -101,19 +103,6 @@ namespace local_messager
             if (setting is tcp.server)
             {
                 Server.Send(textBox_message_text.Text);
-            }
-        }
-
-        private void LocalMessager_form_Load(object sender, EventArgs e)
-        {
-            try
-            {
-                Server.stop();
-                Client.Disconnect();
-            }
-            catch (Exception ex)
-            {
-                if (debugging) MessageBox.Show(ex.Message);
             }
         }
         public void waiting_for_the_client()
@@ -142,11 +131,18 @@ namespace local_messager
         {
             textBox1.Text += message+ "\n\r";
         }
-        public void ClientConnect(TcpClient tcpClient)
+        public async void ClientConnect(TcpClient tcpClient)
         {
             Invoke(new textBoxAdd_del(textBoxAdd), "client (name) connecting\n\r");
-            BeginInvoke(new textBoxAdd_del(textBoxAdd), new object[] { Server.read(tcpClient)});
-           // NetworkStream stream = tcpClient.GetStream();
+            Server.Send("(name) connected");
+            await Task.Run(() =>
+            {
+                while (true)
+                {
+                    BeginInvoke(new textBoxAdd_del(textBoxAdd), new object[] { Server.read(tcpClient) });
+                }
+            });
+            // NetworkStream stream = tcpClient.GetStream();
             //while (true)
             //{
             //    try
@@ -174,6 +170,25 @@ namespace local_messager
             //        break;
             //    }
             //}
+        }
+        private void LocalMessager_form_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Environment.Exit(Environment.ExitCode);  //close all thread
+            try
+            {
+                if (setting is tcp.server)
+                {
+                    Server.stop();
+                }
+                if (setting is tcp.client)
+                {
+                    Client.Disconnect();
+                }
+            }
+            catch (Exception ex)
+            {
+                if (debugging) MessageBox.Show(ex.Message);
+            }
         }
     }
 }

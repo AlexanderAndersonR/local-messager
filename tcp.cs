@@ -144,10 +144,10 @@ namespace local_messager
         }
         public class server
         {
-            //public List<String> history = new List<String>();
             public List<TcpClient> clients = new List<TcpClient>();
             public TcpListener tcpListener;
-            public bool debugging;
+            public bool debugging_message;
+            public bool thow_exeption;
             public string ipAdress { get; set; }
             public int port { get; set; }
             public string code { get; set; }
@@ -158,7 +158,19 @@ namespace local_messager
             }
             public string GetIPAdress()
             {
-                return Dns.GetHostEntry(GetHostName()).AddressList[1].ToString();
+                //change
+                // ip version 
+                //return Dns.GetHostEntry(GetHostName()).AddressList[1].ToString();
+                IPAddress[] loc_ip = Dns.GetHostAddresses(Dns.GetHostName());
+                //StringBuilder builder = new StringBuilder();
+                //loc_ip[loc_ip.Length]
+                //foreach (var item in loc_ip)
+                //{
+                //    builder.Append(item.ToString());
+                //}
+                //return builder.ToString();
+
+                return loc_ip[loc_ip.Length - 1].ToString();
             }
             public bool start()
             {
@@ -179,7 +191,8 @@ namespace local_messager
                 catch (Exception e)
                 {
                     work_flag = false;
-                    if (debugging) MessageBox.Show(e.Message);
+                    if (debugging_message) MessageBox.Show(e.Message);
+                    if (thow_exeption) throw;
                     return false;
                 }
             }
@@ -193,71 +206,94 @@ namespace local_messager
             {
                 try
                 {
+                    foreach (var item in clients)
+                    {
+                        item.Close();
+                    }
                     tcpListener.Stop();
+                    clients.Clear();
                     work_flag = false;
                 }
                 catch (Exception e)
                 {
                     work_flag = false;
-                    if (debugging) MessageBox.Show(e.Message);
+                    if (debugging_message) MessageBox.Show(e.Message);
+                    if (thow_exeption) throw;
                 }
             }
             public string read(TcpClient tcpClient)
             {
                 try
                 {
-                    if (work_flag)
+                    NetworkStream stream = tcpClient.GetStream();
+                    StringBuilder response = new StringBuilder();
+                    byte[] data = new byte[256];
+                    do
                     {
-                        NetworkStream stream = tcpClient.GetStream();
-                        StringBuilder response = new StringBuilder();
-                        byte[] data = new byte[256];
-                        do
+                        int bytes = stream.Read(data, 0, data.Length);
+                        if (code == "UTF8")
                         {
-                            int bytes = stream.Read(data, 0, data.Length);
-                            if (code == "UTF8")
-                            {
-                                response.Append(Encoding.UTF8.GetString(data, 0, bytes));
-                            }
-                            else if (code == "ASCII")
-                            {
-                                response.Append(Encoding.ASCII.GetString(data, 0, bytes));
-                            }
-                            else if (code == "Unicode")
-                            {
-                                response.Append(Encoding.Unicode.GetString(data, 0, bytes));
-                            }
-                            else if (code == "UTF7")
-                            {
-                                response.Append(Encoding.UTF7.GetString(data, 0, bytes));
-                            }
+                            response.Append(Encoding.UTF8.GetString(data, 0, bytes));
                         }
-                        while (stream.DataAvailable);
-                        return response.ToString();
+                        else if (code == "ASCII")
+                        {
+                            response.Append(Encoding.ASCII.GetString(data, 0, bytes));
+                        }
+                        else if (code == "Unicode")
+                        {
+                            response.Append(Encoding.Unicode.GetString(data, 0, bytes));
+                        }
+                        else if (code == "UTF7")
+                        {
+                            response.Append(Encoding.UTF7.GetString(data, 0, bytes));
+                        }
                     }
-                    else
-                    {
-                        work_flag = false;
-                        return "port closed";
-                    }
+                    while (stream.DataAvailable);
+                    stream.Close();
+                    return response.ToString();
                 }
                 catch (Exception e)
                 {
                     work_flag = false;
-                    if (debugging) MessageBox.Show("Ошибка при подключении к серверу\r\n" + e, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    if (debugging_message) MessageBox.Show(e.Message);
+                    if (thow_exeption) throw;
                     return "port error";
                 }
             }
             public void Send(string message)
             {
-                byte[] data = Encoding.UTF8.GetBytes(message);
-
-                foreach (TcpClient item in clients)
+                try
                 {
-                    NetworkStream stream = item.GetStream();
-                    stream.Write(data, 0, data.Length);
+                    byte[] data = new byte[message.Length];
+                    if (code == "UTF8")
+                    {
+                        data = Encoding.UTF8.GetBytes(message);
+                    }
+                    else if (code == "ASCII")
+                    {
+                        data = Encoding.ASCII.GetBytes(message);
+                    }
+                    else if (code == "Unicode")
+                    {
+                        data = Encoding.Unicode.GetBytes(message);
+                    }
+                    else if (code == "UTF7")
+                    {
+                        data = Encoding.UTF7.GetBytes(message);
+                    }
+                    foreach (TcpClient item in clients)
+                    {
+                        NetworkStream stream = item.GetStream();
+                        stream.Write(data, 0, data.Length);
+                    }
+                }
+                catch (Exception e)
+                {
+                    if (debugging_message) MessageBox.Show(e.Message);
+                    if (thow_exeption) throw;
                 }
             }
         }
-
     }
 }
+
