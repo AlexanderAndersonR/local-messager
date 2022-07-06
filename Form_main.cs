@@ -18,6 +18,7 @@ namespace local_messager
         tcp.client Client = new tcp.client();
         bool debugging;
         object setting = null;
+        List<Thread> threads = new List<Thread>();
         public LocalMessager_form()
         {
             InitializeComponent();
@@ -51,7 +52,7 @@ namespace local_messager
                 toolStripMenuItem_CreateLocalServer.Enabled = false;
                 Thread listenThread = new Thread(new ThreadStart(() => waiting_for_the_client()));
                 listenThread.Start();
-                //BeginInvoke(new SetTextDeleg(si_DataReceived), new object[] { Server.history });
+                threads.Add(listenThread);
             }
             if (_setting is tcp.client)
             {
@@ -61,7 +62,8 @@ namespace local_messager
                 ToolStripMenuItem_disconnect.Visible = true;
                 await Task.Run(() => 
                 {
-                    while (Client.con_status) { BeginInvoke(new SetTextDeleg_client(si_DataReceived), new object[] { Client.read() }); }
+                    string i = Client.code;
+                    while (Client.con_status()) { BeginInvoke(new SetTextDeleg_client(si_DataReceived), new object[] { Client.read() }); }
                     });
             }
         }
@@ -82,6 +84,11 @@ namespace local_messager
                 toolStripMenuItem_ConnecttoLocalServer.Enabled = true;
                 ToolStripMenuItem_disconnect.Visible = false;
             }
+            foreach (Thread item in threads)
+            {
+                item.Interrupt();
+            }
+            threads.Clear();
         }
        // private delegate void SetTextDeleg(List<String> text);
         private delegate void SetTextDeleg_client(string text);
@@ -94,15 +101,17 @@ namespace local_messager
             textBox1.Text += text + "\n\r";
         }
 
-        private void button_send_message_Click(object sender, EventArgs e)
+        private async void button_send_message_Click(object sender, EventArgs e)
         {
             if (setting is tcp.client)
             {
-                Client.Send(textBox_message_text.Text);
+                await Task.Run(() => { Client.Send(textBox_message_text.Text); });
+                
             }
             if (setting is tcp.server)
             {
-                Server.Send(textBox_message_text.Text);
+                await Task.Run(() => { Server.Send(textBox_message_text.Text); });
+                
             }
         }
         public void waiting_for_the_client()
@@ -112,10 +121,7 @@ namespace local_messager
                 while (true)
                 {
                     TcpClient tcpClient = Server.tcpListener.AcceptTcpClient();
-                    //ClientObject clientObject = new ClientObject(tcpClient, this);
-                    //Thread clientThread = new Thread(new ThreadStart(clientObject.Process));
                     Server.clients.Add(tcpClient);
-                    //clients.Add(tcpClient);
                     Thread clientThread = new Thread(new ThreadStart(() => ClientConnect(tcpClient)));
                     clientThread.Start();
                 }
@@ -129,47 +135,22 @@ namespace local_messager
         private delegate void textBoxAdd_del(string message);
         void textBoxAdd(string message)
         {
-            textBox1.Text += message+ "\n\r";
+            if (!String.IsNullOrEmpty(message))
+                textBox1.Text += message+ "\n\r";
         }
         public async void ClientConnect(TcpClient tcpClient)
         {
             Invoke(new textBoxAdd_del(textBoxAdd), "client (name) connecting\n\r");
-            Server.Send("(name) connected");
+            
             await Task.Run(() =>
             {
-                while (true)
+                Server.Send("(name) connected");
+                while (tcpClient.Connected)
                 {
                     BeginInvoke(new textBoxAdd_del(textBoxAdd), new object[] { Server.read(tcpClient) });
                 }
+                Invoke(new textBoxAdd_del(textBoxAdd), "client (name) disconnect\n\r");
             });
-            // NetworkStream stream = tcpClient.GetStream();
-            //while (true)
-            //{
-            //    try
-            //    {
-            //        //NetworkStream stream = tcpClient.GetStream();
-            //        // сообщение для отправки клиенту
-            //        string response = "Привет мир";
-            //        // преобразуем сообщение в массив байтов
-            //        byte[] data = Encoding.UTF8.GetBytes(response);
-
-            //        // отправка сообщения
-            //        stream.Write(data, 0, data.Length);
-            //        //Console.WriteLine("Отправлено сообщение: {0}", response);
-            //        //// закрываем поток
-            //        //stream.Close();
-            //        //// закрываем подключение
-            //        //tcpClient.Close();
-            //        // создаем новый поток для обслуживания нового клиента
-            //        //Thread clientThread = new Thread(new ThreadStart(clientObject.Process));
-            //        //clientThread.Start();
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        if (debugging) MessageBox.Show(e.Message);
-            //        break;
-            //    }
-            //}
         }
         private void LocalMessager_form_FormClosing(object sender, FormClosingEventArgs e)
         {

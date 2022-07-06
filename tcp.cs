@@ -16,20 +16,18 @@ namespace local_messager
             public bool debugging;
             public string ipAdress { get; set; }
             public int port { get; set; }
-            public bool con_status { get; set; }
+            public bool con_status() { return tcpClient.Connected; }
             public string code { get; set; }
             public bool connect()
             {
                 try
                 {
                     tcpClient.Connect(ipAdress, port);
-                    con_status = true;
                     return true;
                 }
                 catch (Exception e)
                 {
                     if (debugging) MessageBox.Show("Ошибка при подключении к серверу\r\n" + e, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-                    con_status = false;
                     return false;
                 }
             }
@@ -43,7 +41,7 @@ namespace local_messager
             {
                 try
                 {
-                    if (con_status)
+                    if (con_status())
                     {
                         NetworkStream stream = tcpClient.GetStream();
                         StringBuilder response = new StringBuilder();
@@ -69,17 +67,16 @@ namespace local_messager
                             }
                         }
                         while (stream.DataAvailable);
+                        stream.Close();
                         return response.ToString();
                     }
                     else
                     {
-                        con_status = false;
                         return "port closed";
                     }
                 }
                 catch (Exception e)
                 {
-                    con_status = false;
                     if (debugging) MessageBox.Show("Ошибка при подключении к серверу\r\n" + e, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                     return "port error";
                 }
@@ -90,13 +87,11 @@ namespace local_messager
                 {
                     try
                     {
-                        con_status = false;
                         tcpClient.Close();
 
                     }
                     catch (Exception e)
                     {
-                        con_status = false;
                         if (debugging) MessageBox.Show(e.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
                     }
@@ -107,7 +102,7 @@ namespace local_messager
             {
                 try
                 {
-                    if (con_status)
+                    if (con_status())
                     {
                         NetworkStream stream = tcpClient.GetStream();
                         byte[] data = new byte[message.Length];
@@ -131,13 +126,11 @@ namespace local_messager
                     }
                     else
                     {
-                        con_status = false;
                         MessageBox.Show("Порт закрыт", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                     }
                 }
                 catch (Exception e)
                 {
-                    con_status = false;
                     if (debugging) MessageBox.Show("Ошибка при подключении к серверу\r\n" + e, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 }
             }
