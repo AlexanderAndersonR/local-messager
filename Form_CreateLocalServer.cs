@@ -24,6 +24,7 @@ namespace local_messager
             if (Properties.Settings.Default.CodeCreate!= null && Properties.Settings.Default.CodeCreate != "")
             {
                 comboBox1.SelectedItem = Properties.Settings.Default.CodeCreate;
+                Server.code=comboBox1.Text;
             }
             if (Properties.Settings.Default.ipCreate != null && Properties.Settings.Default.ipCreate != "")
             {
@@ -44,6 +45,7 @@ namespace local_messager
             {
                 Properties.Settings.Default.CodeCreate = comboBox1.SelectedItem.ToString();
                 Properties.Settings.Default.Save();
+                Server.code = comboBox1.Text;
             }
         }
         private void textBox_IP_TextChanged(object sender, EventArgs e)
@@ -84,8 +86,6 @@ namespace local_messager
         private void button_Create_Click(object sender, EventArgs e)
         {
             start_server();
-            //Thread listenThread = new Thread(new ThreadStart(()=>Server.waiting_for_the_client()));
-            //listenThread.Start();
         }
         private void start_server()
         {
@@ -99,24 +99,5 @@ namespace local_messager
                 this.Close();
             }
         }
-        //BeginInvoke(new SetTextDeleg(si_DataReceived), new object[] { client.read() });
-        //private delegate void SetTextDeleg(string text);
-        //private void si_DataReceived(string data)
-        //{
-        //    save_log_file(data.Trim());
-        //    DataReceived.Add(data.Trim());
-        //    if (checked_message)
-        //    {
-        //        checked_message_List.Add(data.Trim());
-        //    }
-        //    for (int i = 0; i < DataReceived.Count; i++)
-        //    {
-        //        if (i == 100)
-        //        {
-        //            DataReceived.RemoveAt(0);
-        //        }
-        //    }
-        //    Form_LogDialog.getTextBox().Lines = DataReceived.ToArray();
-        //}
     }
 }

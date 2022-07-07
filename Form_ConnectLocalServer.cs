@@ -29,6 +29,18 @@ namespace local_messager
             }
             textBox_IP.Text = Properties.Settings.Default.ipConnect = !String.IsNullOrEmpty(Properties.Settings.Default.ipConnect) ? Properties.Settings.Default.ipConnect : "Enter server ip";
             textBox_Port.Text = Properties.Settings.Default.portConnect.ToString();
+            if (!String.IsNullOrEmpty(Properties.Settings.Default.NickName))
+            {
+                LocalMessager_form main_form = this.Owner as LocalMessager_form;
+                if (main_form != null)
+                {
+                    main_form.NickName = Properties.Settings.Default.NickName;
+                }
+            }
+            else
+            {
+                textBox_NickName.Text = "Enter your nickname";
+            }
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -85,15 +97,9 @@ namespace local_messager
                 if (main_form != null)
                 {
                     main_form.StartSetting(Client);
-                    //Server.getMessage(main_form.textBox);
-                    // BeginInvoke();
-                    //Thread clientThread = new Thread(()=>Server.getMessage(main_form.textBox));
-                    //clientThread.Start();
                 }
                 this.Close();
             }
-            //Thread listenThread = new Thread(new ThreadStart(() => Server.waiting_for_the_client()));
-            //listenThread.Start();
         }
 
     }

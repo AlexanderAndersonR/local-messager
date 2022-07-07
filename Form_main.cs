@@ -16,12 +16,15 @@ namespace local_messager
     {
         tcp.server Server = new tcp.server();
         tcp.client Client = new tcp.client();
+        public string NickName { get; set; }
         bool debugging;
         object setting = null;
         List<Thread> threads = new List<Thread>();
         public LocalMessager_form()
         {
             InitializeComponent();
+            if (!String.IsNullOrEmpty(Properties.Settings.Default.NickName))
+                NickName = Properties.Settings.Default.NickName;
             Server.debugging_message = true;
             Client.debugging = true;
             debugging = true;
@@ -60,11 +63,11 @@ namespace local_messager
                 textBox1.Text += "Connecting server...\r\n";
                 toolStripMenuItem_ConnecttoLocalServer.Enabled = false;
                 ToolStripMenuItem_disconnect.Visible = true;
+                if(Client.con_status()) Client.Send(NickName);
                 await Task.Run(() => 
                 {
-                    string i = Client.code;
-                    while (Client.con_status()) { BeginInvoke(new SetTextDeleg_client(si_DataReceived), new object[] { Client.read() }); }
-                    });
+                    while (Client.con_status()) {Invoke(new SetTextDeleg_client(si_DataReceived), new object[] { Client.read() }); }
+                });
             }
         }
 
@@ -90,12 +93,7 @@ namespace local_messager
             }
             threads.Clear();
         }
-       // private delegate void SetTextDeleg(List<String> text);
         private delegate void SetTextDeleg_client(string text);
-        public void si_DataReceived(List<String> text)
-        {
-            textBox1.Text += String.Join("\n\r",text.ToArray());
-        }
         public void si_DataReceived(string text)
         {
             textBox1.Text += text + "\n\r";
@@ -106,12 +104,10 @@ namespace local_messager
             if (setting is tcp.client)
             {
                 await Task.Run(() => { Client.Send(textBox_message_text.Text); });
-                
             }
             if (setting is tcp.server)
             {
                 await Task.Run(() => { Server.Send(textBox_message_text.Text); });
-                
             }
         }
         public void waiting_for_the_client()
@@ -125,7 +121,6 @@ namespace local_messager
                     Thread clientThread = new Thread(new ThreadStart(() => ClientConnect(tcpClient)));
                     clientThread.Start();
                 }
-
             }
             catch (Exception e)
             {
@@ -138,19 +133,20 @@ namespace local_messager
             if (!String.IsNullOrEmpty(message))
                 textBox1.Text += message+ "\n\r";
         }
-        public async void ClientConnect(TcpClient tcpClient)
+        public /*async*/ void ClientConnect(TcpClient tcpClient)
         {
-            Invoke(new textBoxAdd_del(textBoxAdd), "client (name) connecting\n\r");
-            
-            await Task.Run(() =>
-            {
-                Server.Send("(name) connected");
+            string client_name = Server.read(tcpClient);
+            Invoke(new textBoxAdd_del(textBoxAdd), client_name + " connected\n\r");
+            //await Task.Run(() =>
+            //{
+                Server.Send(client_name + " connected\n\r");
                 while (tcpClient.Connected)
                 {
-                    BeginInvoke(new textBoxAdd_del(textBoxAdd), new object[] { Server.read(tcpClient) });
+                    Invoke(new textBoxAdd_del(textBoxAdd), new object[] { Server.read(tcpClient) });
                 }
-                Invoke(new textBoxAdd_del(textBoxAdd), "client (name) disconnect\n\r");
-            });
+                Invoke(new textBoxAdd_del(textBoxAdd), client_name +" disconnect\n\r");
+            //});
+            Environment.Exit(0); //завершение процесса
         }
         private void LocalMessager_form_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -173,23 +169,3 @@ namespace local_messager
         }
     }
 }
-
-//BeginInvoke(new SetTextDeleg(si_DataReceived), new object[] { client.read() });
-//private delegate void SetTextDeleg(string text);
-//private void si_DataReceived(string data)
-//{
-//    save_log_file(data.Trim());
-//    DataReceived.Add(data.Trim());
-//    if (checked_message)
-//    {
-//        checked_message_List.Add(data.Trim());
-//    }
-//    for (int i = 0; i < DataReceived.Count; i++)
-//    {
-//        if (i == 100)
-//        {
-//            DataReceived.RemoveAt(0);
-//        }
-//    }
-//    Form_LogDialog.getTextBox().Lines = DataReceived.ToArray();
-//}

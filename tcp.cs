@@ -67,7 +67,6 @@ namespace local_messager
                             }
                         }
                         while (stream.DataAvailable);
-                        stream.Close();
                         return response.ToString();
                     }
                     else
@@ -87,6 +86,7 @@ namespace local_messager
                 {
                     try
                     {
+                        tcpClient.GetStream().Close();
                         tcpClient.Close();
 
                     }
@@ -151,18 +151,7 @@ namespace local_messager
             }
             public string GetIPAdress()
             {
-                //change
-                // ip version 
-                //return Dns.GetHostEntry(GetHostName()).AddressList[1].ToString();
                 IPAddress[] loc_ip = Dns.GetHostAddresses(Dns.GetHostName());
-                //StringBuilder builder = new StringBuilder();
-                //loc_ip[loc_ip.Length]
-                //foreach (var item in loc_ip)
-                //{
-                //    builder.Append(item.ToString());
-                //}
-                //return builder.ToString();
-
                 return loc_ip[loc_ip.Length - 1].ToString();
             }
             public bool start()
@@ -201,6 +190,7 @@ namespace local_messager
                 {
                     foreach (var item in clients)
                     {
+                        item.GetStream().Close();
                         item.Close();
                     }
                     tcpListener.Stop();
@@ -242,7 +232,6 @@ namespace local_messager
                         }
                     }
                     while (stream.DataAvailable);
-                    stream.Close();
                     return response.ToString();
                 }
                 catch (Exception e)
