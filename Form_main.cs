@@ -86,11 +86,11 @@ namespace local_messager
                 toolStripMenuItem_ConnecttoLocalServer.Enabled = true;
                 ToolStripMenuItem_disconnect.Visible = false;
             }
-            foreach (Thread item in threads)
-            {
-                item.Interrupt();
-            }
-            threads.Clear();
+            //foreach (Thread item in threads)
+            //{
+            //    item.Interrupt();
+            //}
+            //threads.Clear();
         }
         private delegate void SetTextDeleg_client(string text);
         public void si_DataReceived(string text)
@@ -132,30 +132,17 @@ namespace local_messager
             if (!String.IsNullOrEmpty(message))
                 textBox1.Text += message+ "\n\r";
         }
-        public /*async*/ void ClientConnect(TcpClient tcpClient)
+        public void ClientConnect(TcpClient tcpClient)
         {
             string client_name = Server.read(tcpClient);
             Invoke(new textBoxAdd_del(textBoxAdd), client_name + " connected\n\r");
-            //await Task.Run(() =>
-            //{
                 Server.Send(client_name + " connected\n\r");
-                while (tcpClient.Connected)
+                while (Client.con_status(tcpClient))
                 {
                     Invoke(new textBoxAdd_del(textBoxAdd), new object[] { Server.read(tcpClient, thow_exeption) });
-                //try
-                //{
-                //    byte[] data = new byte[256];
-                //    tcpClient.GetStream().Read(data, 0, (int)tcpClient.ReceiveBufferSize);//check connected client 
-                //}
-                //catch (Exception)
-                //{
-                //    tcpClient.GetStream().Close();
-                //    tcpClient.Close();
-                //}
                 }
                 Invoke(new textBoxAdd_del(textBoxAdd), client_name +" disconnect\n\r");
-            //});
-            //Environment.Exit(0); //завершение процесса
+            Server.clients.Remove(tcpClient);
         }
         private void LocalMessager_form_FormClosing(object sender, FormClosingEventArgs e)
         {

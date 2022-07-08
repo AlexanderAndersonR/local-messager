@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -16,7 +18,37 @@ namespace local_messager
             public bool debugging;
             public string ipAdress { get; set; }
             public int port { get; set; }
-            public bool con_status() { return tcpClient.Connected; }
+            public bool con_status(TcpClient client) 
+            {
+                try
+                {
+                    IPGlobalProperties ipProperties = IPGlobalProperties.GetIPGlobalProperties();
+                    TcpConnectionInformation[] tcpConnections = ipProperties.GetActiveTcpConnections().Where(x => x.LocalEndPoint.Equals(client.Client.LocalEndPoint) && x.RemoteEndPoint.Equals(client.Client.RemoteEndPoint)).ToArray();
+
+                    if (tcpConnections != null && tcpConnections.Length > 0)
+                    {
+                        TcpState stateOfConnection = tcpConnections.First().State;
+                        if (stateOfConnection == TcpState.Established)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+
+                    }
+                    return false;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+            public bool con_status()
+            {
+                return con_status(tcpClient);
+            }
             public string code { get; set; }
             public bool connect()
             {
@@ -28,7 +60,17 @@ namespace local_messager
                 catch (Exception e)
                 {
                     if (debugging) MessageBox.Show("Ошибка при подключении к серверу\r\n" + e, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-                    return false;
+                    try
+                    {
+                        tcpClient = new TcpClient();
+                        tcpClient.Connect(ipAdress, port);
+                        return true;
+                    }
+                    catch (Exception)
+                    {
+                        if (debugging) MessageBox.Show("Ошибка при подключении к серверу\r\n" + e, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        return false;
+                    }
                 }
             }
             public bool connect(string _ipAdress, int _port)
@@ -41,7 +83,7 @@ namespace local_messager
             {
                 try
                 {
-                    if (con_status())
+                    if (con_status(tcpClient))
                     {
                         NetworkStream stream = tcpClient.GetStream();
                         StringBuilder response = new StringBuilder();
@@ -67,6 +109,7 @@ namespace local_messager
                             }
                         }
                         while (stream.DataAvailable);
+                        
                         return response.ToString();
                     }
                     else
@@ -82,11 +125,9 @@ namespace local_messager
             }
             public void Disconnect()
             {
-                //if (tcpClient.Connected)
-                //{
                     try
                     {
-                        tcpClient.GetStream().Close();
+                        tcpClient.Client.Shutdown(SocketShutdown.Both);
                         tcpClient.Close();
                     }
                     catch (Exception e)
@@ -94,14 +135,12 @@ namespace local_messager
                         if (debugging) MessageBox.Show(e.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
                     }
-
-                //}
             }
             public void Send(string message)
             {
                 try
                 {
-                    if (con_status())
+                    if (con_status(tcpClient))
                     {
                         NetworkStream stream = tcpClient.GetStream();
                         byte[] data = new byte[message.Length];
@@ -190,11 +229,9 @@ namespace local_messager
                     }
                     tcpListener.Stop();
                     clients.Clear();
-                    work_flag = false;
                 }
                 catch (Exception e)
                 {
-                    work_flag = false;
                     if (debugging_message) MessageBox.Show(e.Message);
                     if (thow_exeption) throw;
                 }
