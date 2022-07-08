@@ -106,5 +106,29 @@ namespace local_messager.Properties {
                 this["NickName"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool thow_exeption {
+            get {
+                return ((bool)(this["thow_exeption"]));
+            }
+            set {
+                this["thow_exeption"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool debug_message {
+            get {
+                return ((bool)(this["debug_message"]));
+            }
+            set {
+                this["debug_message"] = value;
+            }
+        }
     }
 }

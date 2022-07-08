@@ -82,13 +82,12 @@ namespace local_messager
             }
             public void Disconnect()
             {
-                if (tcpClient.Connected)
-                {
+                //if (tcpClient.Connected)
+                //{
                     try
                     {
                         tcpClient.GetStream().Close();
                         tcpClient.Close();
-
                     }
                     catch (Exception e)
                     {
@@ -96,7 +95,7 @@ namespace local_messager
 
                     }
 
-                }
+                //}
             }
             public void Send(string message)
             {
@@ -140,21 +139,17 @@ namespace local_messager
             public List<TcpClient> clients = new List<TcpClient>();
             public TcpListener tcpListener;
             public bool debugging_message;
-            public bool thow_exeption;
             public string ipAdress { get; set; }
             public int port { get; set; }
             public string code { get; set; }
             public bool work_flag = false;
-            public string GetHostName()
-            {
-                return Dns.GetHostName();
-            }
+            public string GetHostName(){ return Dns.GetHostName(); }
             public string GetIPAdress()
             {
                 IPAddress[] loc_ip = Dns.GetHostAddresses(Dns.GetHostName());
                 return loc_ip[loc_ip.Length - 1].ToString();
             }
-            public bool start()
+            public bool start(bool thow_exeption = false)
             {
                 try
                 {
@@ -178,13 +173,13 @@ namespace local_messager
                     return false;
                 }
             }
-            public bool start(string _ipAdress, int _port)
+            public bool start(string _ipAdress, int _port,bool thow_exeption = false)
             {
                 ipAdress = _ipAdress;
                 port = _port;
-                return start();
+                return start(thow_exeption);
             }
-            public void stop()
+            public void stop(bool thow_exeption = false)
             {
                 try
                 {
@@ -204,7 +199,7 @@ namespace local_messager
                     if (thow_exeption) throw;
                 }
             }
-            public string read(TcpClient tcpClient)
+            public string read(TcpClient tcpClient, bool thow_exeption = false)
             {
                 try
                 {
@@ -238,11 +233,13 @@ namespace local_messager
                 {
                     work_flag = false;
                     if (debugging_message) MessageBox.Show(e.Message);
-                    if (thow_exeption) throw;
+                    if (thow_exeption) throw e;
+                    tcpClient.GetStream().Close();
+                    tcpClient.Close();
                     return "port error";
                 }
             }
-            public void Send(string message)
+            public void Send(string message, bool thow_exeption = false)
             {
                 try
                 {

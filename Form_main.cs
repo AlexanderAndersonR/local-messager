@@ -18,6 +18,7 @@ namespace local_messager
         tcp.client Client = new tcp.client();
         public string NickName { get; set; }
         bool debugging;
+        bool thow_exeption;
         object setting = null;
         List<Thread> threads = new List<Thread>();
         public LocalMessager_form()
@@ -25,9 +26,7 @@ namespace local_messager
             InitializeComponent();
             if (!String.IsNullOrEmpty(Properties.Settings.Default.NickName))
                 NickName = Properties.Settings.Default.NickName;
-            Server.debugging_message = true;
-            Client.debugging = true;
-            debugging = true;
+            start_setting();
             ToolStripMenuItem_disconnect.Visible = false;
             this.StartPosition = FormStartPosition.CenterScreen;
         }
@@ -142,11 +141,21 @@ namespace local_messager
                 Server.Send(client_name + " connected\n\r");
                 while (tcpClient.Connected)
                 {
-                    Invoke(new textBoxAdd_del(textBoxAdd), new object[] { Server.read(tcpClient) });
+                    Invoke(new textBoxAdd_del(textBoxAdd), new object[] { Server.read(tcpClient, thow_exeption) });
+                //try
+                //{
+                //    byte[] data = new byte[256];
+                //    tcpClient.GetStream().Read(data, 0, (int)tcpClient.ReceiveBufferSize);//check connected client 
+                //}
+                //catch (Exception)
+                //{
+                //    tcpClient.GetStream().Close();
+                //    tcpClient.Close();
+                //}
                 }
                 Invoke(new textBoxAdd_del(textBoxAdd), client_name +" disconnect\n\r");
             //});
-            Environment.Exit(0); //завершение процесса
+            //Environment.Exit(0); //завершение процесса
         }
         private void LocalMessager_form_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -166,6 +175,30 @@ namespace local_messager
             {
                 if (debugging) MessageBox.Show(ex.Message);
             }
+        }
+        private void checkBox_debug_message_CheckedChanged(object sender, EventArgs e)
+        {
+            debugging = checkBox_debug_message.Checked;
+            Properties.Settings.Default.debug_message = checkBox_debug_message.Checked;
+            Properties.Settings.Default.Save();
+            Server.debugging_message = debugging;
+            Client.debugging = debugging;
+        }
+        void start_setting()
+        {
+            debugging = Properties.Settings.Default.debug_message;
+            thow_exeption = Properties.Settings.Default.thow_exeption;
+            checkBox_thow_exeption.Checked = thow_exeption;
+            checkBox_debug_message.Checked = debugging;
+            Server.debugging_message = debugging;
+            Client.debugging = debugging;
+        }
+
+        private void checkBox_thow_exeption_CheckedChanged(object sender, EventArgs e)
+        {
+            thow_exeption = checkBox_thow_exeption.Checked;
+            Properties.Settings.Default.thow_exeption = checkBox_thow_exeption.Checked;
+            Properties.Settings.Default.Save();
         }
     }
 }
