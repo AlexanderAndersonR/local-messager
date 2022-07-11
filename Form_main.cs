@@ -14,8 +14,10 @@ namespace local_messager
 {
     public partial class LocalMessager_form : Form
     {
+        List<string> Client_NickName= new List<string>();
         tcp.server Server = new tcp.server();
         tcp.client Client = new tcp.client();
+        
         public string NickName { get; set; }
         bool debugging;
         bool thow_exeption;
@@ -48,6 +50,7 @@ namespace local_messager
         {
             if (_setting is tcp.server)
             {
+                ToolStripMenuItem_disconnect.Text = "Stop Server";
                 setting = _setting;
                 textBox1.Text += "Server started\r\n";
                 ToolStripMenuItem_disconnect.Visible = true;
@@ -58,6 +61,7 @@ namespace local_messager
             }
             if (_setting is tcp.client)
             {
+                ToolStripMenuItem_disconnect.Text = "Disconnect";
                 setting = _setting;
                 textBox1.Text += "Connecting server...\r\n";
                 toolStripMenuItem_ConnecttoLocalServer.Enabled = false;
@@ -66,6 +70,8 @@ namespace local_messager
                 await Task.Run(() => 
                 {
                     while (Client.con_status()) {Invoke(new SetTextDeleg_client(si_DataReceived), new object[] { Client.read() }); }
+                    MessageBox.Show("Server Disconnected");
+                    ClientDisconnect();
                 });
             }
         }
@@ -81,16 +87,20 @@ namespace local_messager
             }
             if (setting is tcp.client)
             {
-                Client.Disconnect();
-                textBox1.Text += "Discinnecting\r\n";
-                toolStripMenuItem_ConnecttoLocalServer.Enabled = true;
-                ToolStripMenuItem_disconnect.Visible = false;
+                ClientDisconnect();
             }
             //foreach (Thread item in threads)
             //{
             //    item.Interrupt();
             //}
             //threads.Clear();
+        }
+        private void ClientDisconnect()
+        {
+            Client.Disconnect();
+            textBox1.Text += "Discinnected\r\n";
+            toolStripMenuItem_ConnecttoLocalServer.Enabled = true;
+            ToolStripMenuItem_disconnect.Visible = false;
         }
         private delegate void SetTextDeleg_client(string text);
         public void si_DataReceived(string text)
@@ -106,7 +116,7 @@ namespace local_messager
             }
             if (setting is tcp.server)
             {
-                await Task.Run(() => { Server.Send(textBox_message_text.Text); });
+                await Task.Run(() => { Server.Send("Server: "+ textBox_message_text.Text); });
             }
         }
         public void waiting_for_the_client()
@@ -129,19 +139,22 @@ namespace local_messager
         private delegate void textBoxAdd_del(string message);
         void textBoxAdd(string message)
         {
-            if (!String.IsNullOrEmpty(message))
-                textBox1.Text += message+ "\n\r";
+                textBox1.Text += message+ "\r\n";
         }
         public void ClientConnect(TcpClient tcpClient)
         {
             string client_name = Server.read(tcpClient);
+            Client_NickName.Add(client_name);
             Invoke(new textBoxAdd_del(textBoxAdd), client_name + " connected\n\r");
                 Server.Send(client_name + " connected\n\r");
                 while (Client.con_status(tcpClient))
                 {
-                    Invoke(new textBoxAdd_del(textBoxAdd), new object[] { Server.read(tcpClient, thow_exeption) });
+                    string message = Server.read(tcpClient, thow_exeption);
+                    Invoke(new textBoxAdd_del(textBoxAdd), new object[] { client_name + ": " + message });
+                    Server.Send(client_name+": " + message, tcpClient);
                 }
-                Invoke(new textBoxAdd_del(textBoxAdd), client_name +" disconnect\n\r");
+                Invoke(new textBoxAdd_del(textBoxAdd), client_name +" disconnect");
+            Client_NickName.Remove(client_name);
             Server.clients.Remove(tcpClient);
         }
         private void LocalMessager_form_FormClosing(object sender, FormClosingEventArgs e)

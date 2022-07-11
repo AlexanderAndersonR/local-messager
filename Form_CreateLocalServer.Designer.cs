@@ -38,11 +38,13 @@
             this.button_Create = new System.Windows.Forms.Button();
             this.label_HostName = new System.Windows.Forms.Label();
             this.label_ipAdress = new System.Windows.Forms.Label();
+            this.textBox_NickName = new System.Windows.Forms.TextBox();
+            this.label_Nickname = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // textBox_IP
             // 
-            this.textBox_IP.Location = new System.Drawing.Point(12, 82);
+            this.textBox_IP.Location = new System.Drawing.Point(12, 104);
             this.textBox_IP.MaxLength = 17;
             this.textBox_IP.Multiline = true;
             this.textBox_IP.Name = "textBox_IP";
@@ -53,7 +55,7 @@
             // label_ip
             // 
             this.label_ip.AutoSize = true;
-            this.label_ip.Location = new System.Drawing.Point(12, 65);
+            this.label_ip.Location = new System.Drawing.Point(12, 87);
             this.label_ip.Name = "label_ip";
             this.label_ip.Size = new System.Drawing.Size(51, 13);
             this.label_ip.TabIndex = 1;
@@ -68,7 +70,7 @@
             "ASCII",
             "Unicode",
             "UTF7"});
-            this.comboBox1.Location = new System.Drawing.Point(202, 81);
+            this.comboBox1.Location = new System.Drawing.Point(202, 103);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(121, 21);
             this.comboBox1.TabIndex = 2;
@@ -77,7 +79,7 @@
             // label_Coding
             // 
             this.label_Coding.AutoSize = true;
-            this.label_Coding.Location = new System.Drawing.Point(236, 65);
+            this.label_Coding.Location = new System.Drawing.Point(236, 87);
             this.label_Coding.Name = "label_Coding";
             this.label_Coding.Size = new System.Drawing.Size(40, 13);
             this.label_Coding.TabIndex = 3;
@@ -86,7 +88,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 120);
+            this.label1.Location = new System.Drawing.Point(12, 142);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(26, 13);
             this.label1.TabIndex = 4;
@@ -94,7 +96,7 @@
             // 
             // textBox_Port
             // 
-            this.textBox_Port.Location = new System.Drawing.Point(12, 136);
+            this.textBox_Port.Location = new System.Drawing.Point(12, 158);
             this.textBox_Port.MaxLength = 4;
             this.textBox_Port.Multiline = true;
             this.textBox_Port.Name = "textBox_Port";
@@ -104,7 +106,7 @@
             // 
             // button_Create
             // 
-            this.button_Create.Location = new System.Drawing.Point(15, 184);
+            this.button_Create.Location = new System.Drawing.Point(15, 206);
             this.button_Create.Name = "button_Create";
             this.button_Create.Size = new System.Drawing.Size(75, 23);
             this.button_Create.TabIndex = 6;
@@ -130,11 +132,31 @@
             this.label_ipAdress.TabIndex = 8;
             this.label_ipAdress.Text = "IP Adress - ";
             // 
+            // textBox_NickName
+            // 
+            this.textBox_NickName.Location = new System.Drawing.Point(82, 59);
+            this.textBox_NickName.Multiline = true;
+            this.textBox_NickName.Name = "textBox_NickName";
+            this.textBox_NickName.Size = new System.Drawing.Size(241, 20);
+            this.textBox_NickName.TabIndex = 20;
+            this.textBox_NickName.TextChanged += new System.EventHandler(this.textBox_NickName_TextChanged);
+            // 
+            // label_Nickname
+            // 
+            this.label_Nickname.AutoSize = true;
+            this.label_Nickname.Location = new System.Drawing.Point(12, 62);
+            this.label_Nickname.Name = "label_Nickname";
+            this.label_Nickname.Size = new System.Drawing.Size(64, 13);
+            this.label_Nickname.TabIndex = 19;
+            this.label_Nickname.Text = "Nickname - ";
+            // 
             // Form_CreateLocalServer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(408, 269);
+            this.Controls.Add(this.textBox_NickName);
+            this.Controls.Add(this.label_Nickname);
             this.Controls.Add(this.label_ipAdress);
             this.Controls.Add(this.label_HostName);
             this.Controls.Add(this.button_Create);
@@ -167,5 +189,7 @@
         private System.Windows.Forms.Button button_Create;
         private System.Windows.Forms.Label label_HostName;
         private System.Windows.Forms.Label label_ipAdress;
+        private System.Windows.Forms.TextBox textBox_NickName;
+        private System.Windows.Forms.Label label_Nickname;
     }
 }

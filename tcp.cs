@@ -271,9 +271,45 @@ namespace local_messager
                     work_flag = false;
                     if (debugging_message) MessageBox.Show(e.Message);
                     if (thow_exeption) throw e;
-                    tcpClient.GetStream().Close();
+                    //tcpClient.GetStream().Close();
                     tcpClient.Close();
                     return "port error";
+                }
+            }
+            public void Send(string message,TcpClient Send_message_without_client, bool thow_exeption = false)
+            {
+                try
+                {
+                    byte[] data = new byte[message.Length];
+                    if (code == "UTF8")
+                    {
+                        data = Encoding.UTF8.GetBytes(message);
+                    }
+                    else if (code == "ASCII")
+                    {
+                        data = Encoding.ASCII.GetBytes(message);
+                    }
+                    else if (code == "Unicode")
+                    {
+                        data = Encoding.Unicode.GetBytes(message);
+                    }
+                    else if (code == "UTF7")
+                    {
+                        data = Encoding.UTF7.GetBytes(message);
+                    }
+                    foreach (TcpClient item in clients)
+                    {
+                        if (item != Send_message_without_client)
+                        {
+                            NetworkStream stream = item.GetStream();
+                            stream.Write(data, 0, data.Length);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    if (debugging_message) MessageBox.Show(e.Message);
+                    if (thow_exeption) throw;
                 }
             }
             public void Send(string message, bool thow_exeption = false)

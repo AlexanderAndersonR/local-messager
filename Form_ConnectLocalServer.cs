@@ -59,6 +59,11 @@ namespace local_messager
             {
                 Properties.Settings.Default.NickName = textBox_NickName.Text;
                 Properties.Settings.Default.Save();
+                LocalMessager_form main_form = this.Owner as LocalMessager_form;
+                if (main_form != null)
+                {
+                    main_form.NickName = Properties.Settings.Default.NickName;
+                }
             }
         }
 

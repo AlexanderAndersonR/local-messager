@@ -99,5 +99,13 @@ namespace local_messager
                 this.Close();
             }
         }
+
+        private void textBox_NickName_TextChanged(object sender, EventArgs e)
+        {
+            if (textBox_NickName.Text != "Server")
+            {
+
+            }
+        }
     }
 }
