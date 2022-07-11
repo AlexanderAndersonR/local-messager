@@ -15,7 +15,6 @@ namespace local_messager
     public partial class Form_CreateLocalServer : Form
     {
         tcp.server Server {get;set;}
-        //LocalMessager_form main = this.Owner as LocalMessager_form;
         public Form_CreateLocalServer(tcp.server server)
         {
             InitializeComponent();
@@ -37,6 +36,14 @@ namespace local_messager
             textBox_Port.Text = Properties.Settings.Default.portCreate.ToString();
             label_HostName.Text += server.GetHostName();
             label_ipAdress.Text += server.GetIPAdress();
+            if (String.IsNullOrEmpty(Properties.Settings.Default.ServerNickName))
+            { 
+                textBox_NickName.Text = "Server"; 
+            }
+            else
+            {
+                textBox_NickName.Text = Properties.Settings.Default.ServerNickName;
+            }
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -75,14 +82,6 @@ namespace local_messager
             }
         }
 
-        private void Form_CreateLocalServer_KeyDown(object sender, KeyEventArgs e)
-        {
-            //if (e.KeyCode == Keys.Enter)
-            //{
-            //    start_server();
-            //}
-        }
-
         private void button_Create_Click(object sender, EventArgs e)
         {
             start_server();
@@ -104,7 +103,13 @@ namespace local_messager
         {
             if (textBox_NickName.Text != "Server")
             {
-
+                Properties.Settings.Default.ServerNickName = textBox_NickName.Text;
+                Properties.Settings.Default.Save();
+            }
+            if (String.IsNullOrEmpty(textBox_NickName.Text))
+            {
+                Properties.Settings.Default.ServerNickName = String.Empty;
+                Properties.Settings.Default.Save();
             }
         }
     }

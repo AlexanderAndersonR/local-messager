@@ -130,5 +130,29 @@ namespace local_messager.Properties {
                 this["debug_message"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool clear_textBox {
+            get {
+                return ((bool)(this["clear_textBox"]));
+            }
+            set {
+                this["clear_textBox"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ServerNickName {
+            get {
+                return ((string)(this["ServerNickName"]));
+            }
+            set {
+                this["ServerNickName"] = value;
+            }
+        }
     }
 }

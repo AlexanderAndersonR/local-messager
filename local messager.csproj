@@ -66,6 +66,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Setting_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Setting_Form.Designer.cs">
+      <DependentUpon>Setting_Form.cs</DependentUpon>
+    </Compile>
     <Compile Include="tcp.cs" />
     <EmbeddedResource Include="Form_ConnectLocalServer.resx">
       <DependentUpon>Form_ConnectLocalServer.cs</DependentUpon>
@@ -85,6 +91,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Setting_Form.resx">
+      <DependentUpon>Setting_Form.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

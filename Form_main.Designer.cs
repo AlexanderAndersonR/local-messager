@@ -32,12 +32,11 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem_CreateLocalServer = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem_ConnecttoLocalServer = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_disconnect = new System.Windows.Forms.ToolStripMenuItem();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox_message_text = new System.Windows.Forms.TextBox();
             this.button_send_message = new System.Windows.Forms.Button();
-            this.checkBox_debug_message = new System.Windows.Forms.CheckBox();
-            this.checkBox_thow_exeption = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -46,10 +45,11 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem_CreateLocalServer,
             this.toolStripMenuItem_ConnecttoLocalServer,
+            this.settingToolStripMenuItem,
             this.ToolStripMenuItem_disconnect});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(698, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -67,6 +67,13 @@
             this.toolStripMenuItem_ConnecttoLocalServer.Text = "Connect to Local Server";
             this.toolStripMenuItem_ConnecttoLocalServer.Click += new System.EventHandler(this.toolStripMenuItem_ConnecttoLocalServer_Click);
             // 
+            // settingToolStripMenuItem
+            // 
+            this.settingToolStripMenuItem.Name = "settingToolStripMenuItem";
+            this.settingToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
+            this.settingToolStripMenuItem.Text = "Setting";
+            this.settingToolStripMenuItem.Click += new System.EventHandler(this.settingToolStripMenuItem_Click);
+            // 
             // ToolStripMenuItem_disconnect
             // 
             this.ToolStripMenuItem_disconnect.Name = "ToolStripMenuItem_disconnect";
@@ -76,24 +83,30 @@
             // 
             // textBox1
             // 
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox1.Location = new System.Drawing.Point(12, 27);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(253, 312);
+            this.textBox1.Size = new System.Drawing.Size(515, 320);
             this.textBox1.TabIndex = 1;
             // 
             // textBox_message_text
             // 
-            this.textBox_message_text.Location = new System.Drawing.Point(12, 346);
+            this.textBox_message_text.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox_message_text.Location = new System.Drawing.Point(12, 354);
             this.textBox_message_text.Multiline = true;
             this.textBox_message_text.Name = "textBox_message_text";
-            this.textBox_message_text.Size = new System.Drawing.Size(253, 92);
+            this.textBox_message_text.Size = new System.Drawing.Size(515, 92);
             this.textBox_message_text.TabIndex = 2;
             // 
             // button_send_message
             // 
-            this.button_send_message.Location = new System.Drawing.Point(295, 346);
+            this.button_send_message.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_send_message.Location = new System.Drawing.Point(557, 354);
             this.button_send_message.Name = "button_send_message";
             this.button_send_message.Size = new System.Drawing.Size(75, 23);
             this.button_send_message.TabIndex = 3;
@@ -101,40 +114,17 @@
             this.button_send_message.UseVisualStyleBackColor = true;
             this.button_send_message.Click += new System.EventHandler(this.button_send_message_Click);
             // 
-            // checkBox_debug_message
-            // 
-            this.checkBox_debug_message.AutoSize = true;
-            this.checkBox_debug_message.Location = new System.Drawing.Point(532, 66);
-            this.checkBox_debug_message.Name = "checkBox_debug_message";
-            this.checkBox_debug_message.Size = new System.Drawing.Size(115, 17);
-            this.checkBox_debug_message.TabIndex = 4;
-            this.checkBox_debug_message.Text = "debuging message";
-            this.checkBox_debug_message.UseVisualStyleBackColor = true;
-            this.checkBox_debug_message.CheckedChanged += new System.EventHandler(this.checkBox_debug_message_CheckedChanged);
-            // 
-            // checkBox_thow_exeption
-            // 
-            this.checkBox_thow_exeption.AutoSize = true;
-            this.checkBox_thow_exeption.Location = new System.Drawing.Point(532, 90);
-            this.checkBox_thow_exeption.Name = "checkBox_thow_exeption";
-            this.checkBox_thow_exeption.Size = new System.Drawing.Size(92, 17);
-            this.checkBox_thow_exeption.TabIndex = 5;
-            this.checkBox_thow_exeption.Text = "thow exeption";
-            this.checkBox_thow_exeption.UseVisualStyleBackColor = true;
-            this.checkBox_thow_exeption.CheckedChanged += new System.EventHandler(this.checkBox_thow_exeption_CheckedChanged);
-            // 
             // LocalMessager_form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.checkBox_thow_exeption);
-            this.Controls.Add(this.checkBox_debug_message);
+            this.ClientSize = new System.Drawing.Size(698, 458);
             this.Controls.Add(this.button_send_message);
             this.Controls.Add(this.textBox_message_text);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MinimumSize = new System.Drawing.Size(452, 293);
             this.Name = "LocalMessager_form";
             this.Text = "LocalMessager";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LocalMessager_form_FormClosing);
@@ -154,8 +144,7 @@
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_disconnect;
         private System.Windows.Forms.TextBox textBox_message_text;
         private System.Windows.Forms.Button button_send_message;
-        private System.Windows.Forms.CheckBox checkBox_debug_message;
-        private System.Windows.Forms.CheckBox checkBox_thow_exeption;
+        private System.Windows.Forms.ToolStripMenuItem settingToolStripMenuItem;
     }
 }
 

@@ -134,7 +134,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(408, 269);
+            this.ClientSize = new System.Drawing.Size(372, 208);
             this.Controls.Add(this.textBox_NickName);
             this.Controls.Add(this.label_Nickname);
             this.Controls.Add(this.button_Connect);
@@ -146,8 +146,9 @@
             this.Controls.Add(this.textBox_IP);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(424, 308);
-            this.MinimumSize = new System.Drawing.Size(424, 308);
+            this.MaximumSize = new System.Drawing.Size(388, 247);
+            this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(388, 247);
             this.Name = "Form_ConnectLocalServer";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Connect Local Server";

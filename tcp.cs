@@ -271,7 +271,6 @@ namespace local_messager
                     work_flag = false;
                     if (debugging_message) MessageBox.Show(e.Message);
                     if (thow_exeption) throw e;
-                    //tcpClient.GetStream().Close();
                     tcpClient.Close();
                     return "port error";
                 }
